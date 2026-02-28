@@ -1,0 +1,121 @@
+﻿Use DFAllEnt.pkg
+Use cCJStandardCommandBarSystem.pkg
+
+Object oHtmlHelp is a cHtmlHelp
+End_Object
+
+Object oApplication is a cApplication
+    Set peHelpType to htHtmlHelp
+
+    Object oConnection is a cConnection
+        Use LoginEncryption.pkg
+        Use DatabaseLoginDialog.dg
+    End_Object
+End_Object
+
+Object oToolTipController is a cToolTipController
+    Move Self to ghoToolTipController
+End_Object
+
+Use oEditContextMenu.pkg
+Use oDEOEditContextMenu17.pkg
+
+Object oMain is a Panel
+    Set Label to "Cadastro de Empresas de Santa Catarina"
+    Set Location to 4 3
+    Set Size to 300 450
+
+    Object oCommandBarSystem is a cCJCommandBarSystem
+        Set pbTimerUpdate to True
+        Set peVisualTheme to xtpThemeOffice2013Outlook
+        Set pbAutoResizeIcons to True
+
+        Procedure OnCreateCommandBars
+            Handle hoOptions
+            Get OptionsObject to hoOptions
+            Forward Send OnCreateCommandBars
+        End_Procedure
+
+        Object oMenuBar is a cCJMenuBar
+
+            Object oFileMenu is a cCJMenuItem
+                Set peControlType to xtpControlPopup
+                Set psCaption     to "&Arquivo"
+                Set psDescription to "Opções do sistema."
+                Set psCategory    to "Menus"
+
+                Object oExitMenu is a cCJExitMenuItem
+                    Set pbControlBeginGroup to True
+                    Set psCaption to "S&air"
+                End_Object
+            End_Object
+
+            Object oEmpresasMenu is a cCJMenuItem
+                Set peControlType to xtpControlPopup
+                Set psCaption     to "&Empresas"
+                Set psDescription to "Cadastro e consulta de empresas de Santa Catarina."
+                Set psCategory    to "Menus"
+
+                Object oEmpresaNovo is a cCJMenuItem
+                    Set psCaption     to "&Cadastrar Empresa"
+                    Set psDescription to "Cadastrar uma nova empresa."
+                    
+                    Procedure OnExecute
+                        
+                    End_Procedure
+                    
+                End_Object
+
+                Object oEmpresaListar is a cCJMenuItem
+                    Set psCaption     to "&Consultar Empresas"
+                    Set psDescription to "Consultar, editar e excluir empresas cadastradas."
+                    
+                    Procedure OnExecute
+                        
+                    End_Procedure
+                    
+                End_Object
+
+            End_Object
+
+            Object oHelpMenu is a cCJMenuItem
+                Set peControlType to xtpControlPopup
+                Set psCaption     to "&Ajuda"
+                Set psDescription to "Informações sobre esta aplicação."
+                Set psToolTip     to "Ajuda"
+
+                Object oAboutMenuItem is a cCJAboutMenuItem
+                    Set psCaption to "&Sobre"
+                End_Object
+            End_Object
+
+        End_Object // oMenuBar
+
+        Object oStatusBar is a cCJStatusBar
+
+            Object oStatusPane1 is a cCJStatusBarPane
+                Set piID to sbpIDIdlePane
+                Set pbStyleStretch to True
+            End_Object
+
+            Object oStatusPane2 is a cCJStatusBarPane
+                Set phoViewPane to Self
+                Set pbStyleStretch to True
+            End_Object
+
+        End_Object
+
+    End_Object // oCommandBarSystem
+
+    Object oClientArea is a ClientArea
+        Use StdAbout.pkg
+
+        Procedure Activate_About
+            Send DoAbout "" "" "" "" ""
+        End_Procedure
+
+    End_Object
+
+End_Object // oMain
+
+Start_UI

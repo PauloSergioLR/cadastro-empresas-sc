@@ -1,0 +1,18 @@
+# DATAFLEX PROJECT - CadastroEmpresasSC
+
+# build
+Programs/*.obj
+Programs/*.pdb
+Programs/*.log
+Programs/*.exe
+
+# mantem executavel da aplicacao
+!Programs/CadastroEmpresasSC.exe
+
+# temp/backup
+*.tmp
+*.old
+*.bak
+
+Thumbs.db
+.DS_Store
