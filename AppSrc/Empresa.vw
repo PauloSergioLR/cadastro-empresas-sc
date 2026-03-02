@@ -11,7 +11,7 @@ Deferred_View Activate_oEmpresa for ;
 Object oEmpresa is a View
     Set Size to 194 416
     Set Location to 3 4
-    Set Label    to "Cadastro de Empresas - SC"
+    Set Label to "Cadastro de Empresas - SC"
     
     Object oFrmCNPJ is a Form
         Set Label to "CNPJ:"
@@ -87,10 +87,21 @@ Object oEmpresa is a View
         
     End_Object
 
-    Object oFrmSegmento is a Form
+    Object oFrmSegmento is a ComboForm
         Set Label to "Segmento:"
         Set Location to 53 70
         Set Size to 13 250
+        Set Combo_Sort_State to False
+        Set Entry_State to False
+        
+        Procedure Combo_Fill_List
+            Send Combo_Add_Item ""
+            Send Combo_Add_Item "Tecnologia"
+            Send Combo_Add_Item "Comércio"
+            Send Combo_Add_Item "Indústria"
+            Send Combo_Add_Item "Serviços"
+            Send Combo_Add_Item "Agronegócio"
+        End_Procedure
     End_Object
     
     Procedure pTelaFromBuffer
@@ -99,8 +110,8 @@ Object oEmpresa is a View
         Set Value of oFrmNome        to (Trim(EMPRESA.NOME_EMPRESA))
         Set Value of oFrmResponsavel to (Trim(EMPRESA.NOME_RESPONSAVEL))
         Set Value of oFrmMunicipio   to (Trim(EMPRESA.MUNICIPIO_SC))
-        Set Value of oFrmSegmento    to (Trim(EMPRESA.SEGMENTO))
-        Set Value of oFrmStatus      to (If((EMPRESA.STATUS) = '1','Ativo','Inativo'))
+        Set Value of oFrmSegmento    to (GetDescricaoVT(Empresa_Segmento_VT, (Trim(EMPRESA.SEGMENTO))))
+        Set Value of oFrmStatus      to (GetDescricaoVT(Empresa_Status_VT, EMPRESA.STATUS))
     End_Procedure
 
     Procedure pCarregarEmpresa Integer iId
@@ -150,24 +161,24 @@ Object oEmpresa is a View
                 Get fProximoIdEmpresa to iNovoID
                 Clear EMPRESA
                 Lock
-                    Move iNovoID                                            to EMPRESA.ID_EMPRESA
-                    Move (Trim(Value(oFrmCNPJ)))                            to EMPRESA.CNPJ_EMPRESA
-                    Move (Trim(Value(oFrmNome)))                            to EMPRESA.NOME_EMPRESA
-                    Move (Trim(Value(oFrmResponsavel)))                     to EMPRESA.NOME_RESPONSAVEL
-                    Move (Trim(Value(oFrmMunicipio)))                       to EMPRESA.MUNICIPIO_SC
-                    Move (Trim(Value(oFrmSegmento)))                        to EMPRESA.SEGMENTO                    
-                    Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus))) to EMPRESA.STATUS
+                    Move iNovoID                                                        to EMPRESA.ID_EMPRESA
+                    Move (Trim(Value(oFrmCNPJ)))                                        to EMPRESA.CNPJ_EMPRESA
+                    Move (Trim(Value(oFrmNome)))                                        to EMPRESA.NOME_EMPRESA
+                    Move (Trim(Value(oFrmResponsavel)))                                 to EMPRESA.NOME_RESPONSAVEL
+                    Move (Trim(Value(oFrmMunicipio)))                                   to EMPRESA.MUNICIPIO_SC
+                    Move (GetValorVT(Empresa_Segmento_VT, (Trim(Value(oFrmSegmento))))) to EMPRESA.SEGMENTO                    
+                    Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus)))             to EMPRESA.STATUS
                     SaveRecord EMPRESA
                 Unlock
             End
             Else Begin
                 Reread EMPRESA
-                    Move (Trim(Value(oFrmCNPJ)))                            to EMPRESA.CNPJ_EMPRESA
-                    Move (Trim(Value(oFrmNome)))                            to EMPRESA.NOME_EMPRESA
-                    Move (Trim(Value(oFrmResponsavel)))                     to EMPRESA.NOME_RESPONSAVEL
-                    Move (Trim(Value(oFrmMunicipio)))                       to EMPRESA.MUNICIPIO_SC
-                    Move (Trim(Value(oFrmSegmento)))                        to EMPRESA.SEGMENTO
-                    Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus))) to EMPRESA.STATUS
+                    Move (Trim(Value(oFrmCNPJ)))                                        to EMPRESA.CNPJ_EMPRESA
+                    Move (Trim(Value(oFrmNome)))                                        to EMPRESA.NOME_EMPRESA
+                    Move (Trim(Value(oFrmResponsavel)))                                 to EMPRESA.NOME_RESPONSAVEL
+                    Move (Trim(Value(oFrmMunicipio)))                                   to EMPRESA.MUNICIPIO_SC
+                    Move (GetValorVT(Empresa_Segmento_VT, (Trim(Value(oFrmSegmento))))) to EMPRESA.SEGMENTO
+                    Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus)))             to EMPRESA.STATUS
                     SaveRecord EMPRESA
                 Unlock
             End
@@ -205,7 +216,9 @@ Object oEmpresa is a View
         Set Size to 18 70
         
         Procedure OnClick
-            Send pSalvar
+            If (YesNo_Box("Deseja salvar?", "Atenção", MB_DEFBUTTON2) = MBR_Yes) Begin
+                Send pSalvar
+            End
         End_Procedure
     End_Object
     

@@ -4,12 +4,23 @@ Open EMPRESA
 Open ENDERECO_EMPRESA
 Open CONTATO_EMPRESA
 
-
 Object Empresa_Status_VT  is a DescriptionValidationTable
     Procedure Fill_List
         Forward Send Fill_List
         Send Add_Table_Value "1" "Ativo"
         Send Add_Table_Value "2" "Inativo"
+    End_Procedure
+End_Object
+
+Object Empresa_Segmento_VT  is a DescriptionValidationTable
+    Procedure Fill_List
+        Forward Send Fill_List
+        Send Add_Table_Value "" ""        
+        Send Add_Table_Value "T" "Tecnologia"
+        Send Add_Table_Value "C" "Comércio"
+        Send Add_Table_Value "I" "Indústria"
+        Send Add_Table_Value "S" "Serviços"
+        Send Add_Table_Value "A" "Agronegócio"
     End_Procedure
 End_Object
 
@@ -23,6 +34,7 @@ Class cEMPRESADataDictionary is a DataDictionary
         Set Add_Client_File to CONTATO_EMPRESA.File_Number
         
         Set Field_Value_Table Field EMPRESA.STATUS to Empresa_Status_VT
+        Set Field_Value_Table Field EMPRESA.SEGMENTO to Empresa_Segmento_VT
     End_Procedure
 
 End_Class
