@@ -23,7 +23,7 @@ Object oEmpresa is a View
             Clear EMPRESA
             Move (Value(Self)) to sGlobalCNPJEmpresa
             Send Popup to oEmpresa_sl
-            Send pTelaFromBuffer
+            Send pCarregarEmpresa EMPRESA.ID_EMPRESA
         End_Procedure
         
         Procedure Exiting
@@ -41,7 +41,7 @@ Object oEmpresa is a View
                 Move sValor to EMPRESA.CNPJ_EMPRESA
                 Find eq EMPRESA by 2
                 If (Found) Begin
-                    Send pTelaFromBuffer
+                    Send pCarregarEmpresa EMPRESA.ID_EMPRESA
                 End
             End
         End_Procedure
@@ -171,14 +171,40 @@ Object oEmpresa is a View
     
     End_Object
     
-    Procedure pTelaFromBuffer
-        Set Value of oFrmId          to (String(EMPRESA.ID_EMPRESA))
-        Set Value of oFrmCNPJ        to (Trim(EMPRESA.CNPJ_EMPRESA))
-        Set Value of oFrmNome        to (Trim(EMPRESA.NOME_EMPRESA))
-        Set Value of oFrmResponsavel to (Trim(EMPRESA.NOME_RESPONSAVEL))
-        Set Value of oFrmMunicipio   to (Trim(EMPRESA.MUNICIPIO_SC))
-        Set Value of oFrmSegmento    to (GetDescricaoVT(Empresa_Segmento_VT, (Trim(EMPRESA.SEGMENTO))))
-        Set Value of oFrmStatus      to (GetDescricaoVT(Empresa_Status_VT, EMPRESA.STATUS))
+    Procedure pCarregarContato Integer iIdEmpresa
+        Clear CONTATO_EMPRESA
+        Move iIdEmpresa to CONTATO_EMPRESA.ID_EMPRESA
+        Find EQ CONTATO_EMPRESA by 1
+        If (Found) Begin
+            Set Value of oFrmEmailContato to (Trim(CONTATO_EMPRESA.EMAIL))
+            Set Value of oFrmTelefone     to (Trim(CONTATO_EMPRESA.TELEFONE))
+            Set Value of oFrmCelular      to (Trim(CONTATO_EMPRESA.CELULAR))
+        End
+        Else Begin
+            Set Value of oFrmEmailContato to ""
+            Set Value of oFrmTelefone     to ""
+            Set Value of oFrmCelular      to ""
+        End
+    End_Procedure
+    
+    Procedure pCarregarEndereco Integer iIdEmpresa
+        Clear ENDERECO_EMPRESA
+        Move iIdEmpresa to ENDERECO_EMPRESA.ID_EMPRESA
+        Find EQ ENDERECO_EMPRESA by 1
+        If (Found) Begin
+            Set Value of oFrmCep          to (Trim(ENDERECO_EMPRESA.CEP))
+            Set Value of oFrmLogradouro   to (Trim(ENDERECO_EMPRESA.LOGRADOURO))
+            Set Value of oFrmNumero       to (Trim(ENDERECO_EMPRESA.NUMERO))
+            Set Value of oFrmBairro       to (Trim(ENDERECO_EMPRESA.BAIRRO))
+            Set Value of oFrmComplemento  to (Trim(ENDERECO_EMPRESA.COMPLEMENTO))
+        End
+        Else Begin
+            Set Value of oFrmCep          to ""
+            Set Value of oFrmLogradouro   to ""
+            Set Value of oFrmNumero       to ""
+            Set Value of oFrmBairro       to ""
+            Set Value of oFrmComplemento  to ""
+        End
     End_Procedure
 
     Procedure pCarregarEmpresa Integer iId
@@ -186,7 +212,16 @@ Object oEmpresa is a View
         Move iId to EMPRESA.ID_EMPRESA
         Find EQ EMPRESA by 1
         If (Found) Begin
-            Send pTelaFromBuffer
+            Set Value of oFrmId          to (String(EMPRESA.ID_EMPRESA))
+            Set Value of oFrmCNPJ        to (Trim(EMPRESA.CNPJ_EMPRESA))
+            Set Value of oFrmNome        to (Trim(EMPRESA.NOME_EMPRESA))
+            Set Value of oFrmResponsavel to (Trim(EMPRESA.NOME_RESPONSAVEL))
+            Set Value of oFrmMunicipio   to (Trim(EMPRESA.MUNICIPIO_SC))
+            Set Value of oFrmSegmento    to (GetDescricaoVT(Empresa_Segmento_VT, (Trim(EMPRESA.SEGMENTO))))
+            Set Value of oFrmStatus      to (GetDescricaoVT(Empresa_Status_VT, EMPRESA.STATUS))
+            
+            Send pCarregarEndereco EMPRESA.ID_EMPRESA
+            Send pCarregarContato EMPRESA.ID_EMPRESA
         End
         Else Begin
             Send Info_Box "Empresa não encontrada." "Aviso"
@@ -194,14 +229,24 @@ Object oEmpresa is a View
     End_Procedure
 
     Procedure pLimparTela        
-        Set Value of oFrmId          to ""
-        Set Value of oFrmNome        to ""
-        Set Value of oFrmCNPJ        to ""
-        Set Value of oFrmResponsavel to ""
-        Set Value of oFrmMunicipio   to ""
-        Set Value of oFrmSegmento    to ""
-        Set Value of oFrmStatus      to "1"
+        Set Value of oFrmId           to ""
+        Set Value of oFrmNome         to ""
+        Set Value of oFrmCNPJ         to ""
+        Set Value of oFrmResponsavel  to ""
+        Set Value of oFrmMunicipio    to ""
+        Set Value of oFrmSegmento     to ""
+        Set Value of oFrmStatus       to "1"
+        Set Value of oFrmCep          to ""
+        Set Value of oFrmLogradouro   to ""
+        Set Value of oFrmNumero       to ""
+        Set Value of oFrmBairro       to ""
+        Set Value of oFrmComplemento  to ""
+        Set Value of oFrmEmailContato to ""
+        Set Value of oFrmTelefone     to ""
+        Set Value of oFrmCelular      to ""
         Clear EMPRESA
+        Clear ENDERECO_EMPRESA
+        Clear CONTATO_EMPRESA
     End_Procedure
 
     Procedure pSalvar
@@ -225,18 +270,37 @@ Object oEmpresa is a View
             Move sCNPJ to EMPRESA.CNPJ_EMPRESA
             Find EQ EMPRESA by 2
             If (not(Found)) Begin
+                //Salvar empresa
                 Get fProximoIdEmpresa to iNovoID
                 Clear EMPRESA
-                Lock
-                    Move iNovoID                                                        to EMPRESA.ID_EMPRESA
-                    Move (Trim(Value(oFrmCNPJ)))                                        to EMPRESA.CNPJ_EMPRESA
-                    Move (Trim(Value(oFrmNome)))                                        to EMPRESA.NOME_EMPRESA
-                    Move (Trim(Value(oFrmResponsavel)))                                 to EMPRESA.NOME_RESPONSAVEL
-                    Move (Trim(Value(oFrmMunicipio)))                                   to EMPRESA.MUNICIPIO_SC
-                    Move (GetValorVT(Empresa_Segmento_VT, (Trim(Value(oFrmSegmento))))) to EMPRESA.SEGMENTO                    
-                    Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus)))             to EMPRESA.STATUS
-                    SaveRecord EMPRESA
-                Unlock
+                Move iNovoID                                                            to EMPRESA.ID_EMPRESA
+                Move (Trim(Value(oFrmCNPJ)))                                            to EMPRESA.CNPJ_EMPRESA
+                Move (Trim(Value(oFrmNome)))                                            to EMPRESA.NOME_EMPRESA
+                Move (Trim(Value(oFrmResponsavel)))                                     to EMPRESA.NOME_RESPONSAVEL
+                Move (Trim(Value(oFrmMunicipio)))                                       to EMPRESA.MUNICIPIO_SC
+                Move (GetValorVT(Empresa_Segmento_VT, (Trim(Value(oFrmSegmento)))))     to EMPRESA.SEGMENTO                    
+                Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus)))                 to EMPRESA.STATUS
+                SaveRecord EMPRESA                                                      
+                                                                                        
+                //Salvar endereco                                                       
+                Get fProximoIdEndereco to iNovoID                                       
+                Clear ENDERECO_EMPRESA
+                Move EMPRESA.ID_EMPRESA                                                 to ENDERECO_EMPRESA.ID_EMPRESA                                                  
+                Move (Trim(Value(oFrmCep)))                                             to ENDERECO_EMPRESA.CEP
+                Move (Trim(Value(oFrmLogradouro)))                                      to ENDERECO_EMPRESA.LOGRADOURO
+                Move (Trim(Value(oFrmNumero)))                                          to ENDERECO_EMPRESA.NUMERO
+                Move (Trim(Value(oFrmBairro)))                                          to ENDERECO_EMPRESA.BAIRRO
+                Move (Trim(Value(oFrmComplemento)))                                     to ENDERECO_EMPRESA.COMPLEMENTO
+                SaveRecord ENDERECO_EMPRESA                                             
+                                                                                        
+                //Salvar contatos                                                       
+                Get fProximoIdContato to iNovoID                                        
+                Clear CONTATO_EMPRESA                                                   
+                Move EMPRESA.ID_EMPRESA                                                 to CONTATO_EMPRESA.ID_EMPRESA
+                Move (Trim(Value(oFrmEmailContato)))                                    to CONTATO_EMPRESA.EMAIL
+                Move (Trim(Value(oFrmTelefone)))                                        to CONTATO_EMPRESA.TELEFONE
+                Move (Trim(Value(oFrmCelular)))                                         to CONTATO_EMPRESA.CELULAR
+                SaveRecord CONTATO_EMPRESA
             End
             Else Begin
                 Reread EMPRESA
@@ -248,6 +312,32 @@ Object oEmpresa is a View
                     Move (GetValorVT(Empresa_Status_VT, Value(oFrmStatus)))             to EMPRESA.STATUS
                     SaveRecord EMPRESA
                 Unlock
+                
+                Clear ENDERECO_EMPRESA 
+                Move EMPRESA.ID_EMPRESA to ENDERECO_EMPRESA.ID_EMPRESA
+                Find eq ENDERECO_EMPRESA by 2
+                If (Found) Begin
+                    Reread ENDERECO_EMPRESA
+                        Move (Trim(Value(oFrmCep)))                                      to ENDERECO_EMPRESA.CEP
+                        Move (Trim(Value(oFrmLogradouro)))                               to ENDERECO_EMPRESA.LOGRADOURO
+                        Move (Trim(Value(oFrmNumero)))                                   to ENDERECO_EMPRESA.NUMERO
+                        Move (Trim(Value(oFrmBairro)))                                   to ENDERECO_EMPRESA.BAIRRO
+                        Move (Trim(Value(oFrmComplemento)))                              to ENDERECO_EMPRESA.COMPLEMENTO
+                        SaveRecord ENDERECO_EMPRESA
+                    Unlock
+                End
+                
+                Clear CONTATO_EMPRESA 
+                Move EMPRESA.ID_EMPRESA to CONTATO_EMPRESA.ID_EMPRESA
+                Find eq CONTATO_EMPRESA by 2
+                If (Found) Begin
+                    Reread CONTATO_EMPRESA
+                        Move (Trim(Value(oFrmEmailContato)))                             to CONTATO_EMPRESA.EMAIL
+                        Move (Trim(Value(oFrmTelefone)))                                 to CONTATO_EMPRESA.TELEFONE
+                        Move (Trim(Value(oFrmCelular)))                                  to CONTATO_EMPRESA.CELULAR
+                        SaveRecord CONTATO_EMPRESA
+                    Unlock
+                End                
             End
             Send Info_Box "Registro salvo." "Sucesso"
         End

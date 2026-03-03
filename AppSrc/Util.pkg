@@ -41,3 +41,35 @@ Function fProximoIdEmpresa Returns Integer
 
     Function_Return iNovoID
 End_Function
+
+Function fProximoIdEndereco Returns Integer
+    Integer iNovoID
+
+    Clear ENDERECO_EMPRESA
+    Move 99999999 to ENDERECO_EMPRESA.ID_ENDERECO
+    Find LT ENDERECO_EMPRESA by 1
+    If (Found) Begin
+        Move (ENDERECO_EMPRESA.ID_ENDERECO + 1) to iNovoID
+    End
+    Else Begin
+        Move 1 to iNovoID
+    End
+
+    Function_Return iNovoID
+End_Function
+
+Function fProximoIdContato Returns Integer
+    Integer iNovoID
+
+    Clear CONTATO_EMPRESA
+    Move 99999999 to CONTATO_EMPRESA.ID_CONTATO
+    Find LT CONTATO_EMPRESA by 1
+    If (Found) Begin
+        Move (CONTATO_EMPRESA.ID_CONTATO + 1) to iNovoID
+    End
+    Else Begin
+        Move 1 to iNovoID
+    End
+
+    Function_Return iNovoID
+End_Function
