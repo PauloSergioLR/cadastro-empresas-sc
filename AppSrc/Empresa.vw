@@ -14,7 +14,7 @@ Object oEmpresa is a View
     Set Label to "Cadastro de Empresas - SC"
     
     Object oFrmCNPJ is a Form
-        Set Label to "CNPJ:"
+        Set Label to "CNPJ / CPF:"
         Set Location to 5 70
         Set Size to 13 86
         Set Prompt_Button_Mode to PB_PromptOn
@@ -27,21 +27,23 @@ Object oEmpresa is a View
         End_Procedure
         
         Procedure Exiting
-            If (Value(Self) <> "") Begin
-                If (Length(Value(Self))<>14) Begin
-                    Send Info_Box "Tamanho do CNPJ inválido!" "Aviso"
+            String sValor
+            
+            Move (Trim(Value(Self))) to sValor
+            If (sValor <> "") Begin
+                If ( (Length(sValor)<>14) and (Length(sValor)<>11) ) Begin
+                    Send Info_Box "Tamanho do CNPJ/CPF inválido!" "Aviso"
                     Set Value of Self to ""
                     Procedure_Return
                 End
-                
+                                
                 Clear EMPRESA
-                Move (Value(Self)) to EMPRESA.CNPJ_EMPRESA
+                Move sValor to EMPRESA.CNPJ_EMPRESA
                 Find eq EMPRESA by 2
                 If (Found) Begin
                     Send pTelaFromBuffer
                 End
             End
-            
         End_Procedure
     End_Object
 
@@ -104,6 +106,71 @@ Object oEmpresa is a View
         End_Procedure
     End_Object
     
+    Object oTabs is a TabDialog
+        Set Location to 70 5
+        Set Size to 100 406
+        Set Rotate_Mode to RM_Rotate
+        
+        Object oTabEndereco is a TabPage
+            Set Label to "Endereço"
+            
+            Object oFrmCep is a Form
+                Set Label to "CEP:"
+                Set Location to 3 63
+                Set Size to 13 80
+            End_Object
+            
+            Object oFrmLogradouro is a Form
+                Set Label to "Rua/Av.:"
+                Set Location to 19 63
+                Set Size to 13 250
+            End_Object
+            
+            Object oFrmNumero is a Form
+                Set Label to "Número:"
+                Set Location to 35 63
+                Set Size to 13 60
+            End_Object
+            
+            Object oFrmBairro is a Form
+                Set Label to "Bairro:"
+                Set Location to 51 63
+                Set Size to 13 200
+            End_Object
+            
+            Object oFrmComplemento is a Form
+                Set Label to "Complemento:"
+                Set Location to 67 63
+                Set Size to 13 200
+            End_Object
+            
+        End_Object
+        
+        Object oTabContato is a TabPage
+            Set Label to "Contato"
+            
+            Object oFrmEmailContato is a Form
+                Set Label to "E-mail:"
+                Set Location to 3 63
+                Set Size to 13 250
+            End_Object
+            
+            Object oFrmTelefone is a Form
+                Set Label to "Telefone:"
+                Set Location to 19 63
+                Set Size to 13 120
+            End_Object
+            
+            Object oFrmCelular is a Form
+                Set Label to "Celular:"
+                Set Location to 35 63
+                Set Size to 13 120
+            End_Object
+
+        End_Object
+    
+    End_Object
+    
     Procedure pTelaFromBuffer
         Set Value of oFrmId          to (String(EMPRESA.ID_EMPRESA))
         Set Value of oFrmCNPJ        to (Trim(EMPRESA.CNPJ_EMPRESA))
@@ -141,15 +208,15 @@ Object oEmpresa is a View
         Integer iNovoID
         String sCNPJ sNome
 
-        Get Value of oFrmNome to sNome
         Get Value of oFrmCNPJ to sCNPJ
+        Get Value of oFrmNome to sNome
         
-        If (Trim(sNome) = "") Begin
-            Send Info_Box "Informe o nome da empresa." "Validação"
-            Procedure_Return
-        End
         If (Trim(sCNPJ) = "") Begin
             Send Info_Box "Informe o CNPJ da empresa." "Validação"
+            Procedure_Return
+        End
+        If (Trim(sNome) = "") Begin
+            Send Info_Box "Informe o nome da empresa." "Validação"
             Procedure_Return
         End
 
@@ -182,10 +249,10 @@ Object oEmpresa is a View
                     SaveRecord EMPRESA
                 Unlock
             End
-            Send Info_Box "Registro salvo." "OK"
+            Send Info_Box "Registro salvo." "Sucesso"
         End
         
-        Send pTelaFromBuffer
+        Send pLimparTela
     End_Procedure
 
     Procedure pExcluir
