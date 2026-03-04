@@ -20,8 +20,6 @@ End_Object
 Use oEditContextMenu.pkg
 Use oDEOEditContextMenu17.pkg
 
-String sGlobalCNPJEmpresa
-
 Object oMain is a Panel
     Set Label to "Cadastro de Empresas de Santa Catarina"
     Set Location to 4 3

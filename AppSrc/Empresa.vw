@@ -9,19 +9,19 @@ Open ENDERECO_EMPRESA
 
 Deferred_View Activate_oEmpresa for ;
 Object oEmpresa is a View
-    Set Size to 194 416
+    Set Size to 192 462
     Set Location to 3 4
     Set Label to "Cadastro de Empresas - SC"
     
     Object oFrmCNPJ is a Form
         Set Label to "CNPJ / CPF:"
-        Set Location to 5 70
+        Set Location to 5 143
         Set Size to 13 86
         Set Prompt_Button_Mode to PB_PromptOn
+        Set Label_Col_Offset to 138
         
         Procedure Prompt
             Clear EMPRESA
-            Move (Value(Self)) to sGlobalCNPJEmpresa
             Send Popup to oEmpresa_sl
             Send pCarregarEmpresa EMPRESA.ID_EMPRESA
         End_Procedure
@@ -47,36 +47,19 @@ Object oEmpresa is a View
         End_Procedure
     End_Object
 
-    Object oFrmNome is a Form
-        Set Location to 5 159
-        Set Size to 13 251
-    End_Object
-
-    Object oFrmResponsavel is a Form
-        Set Label to "Responsável:"
-        Set Location to 21 70
-        Set Size to 13 250
-    End_Object
-
     Object oFrmId is a Form
         Set Label to "Id:"
-        Set Location to 21 350
+        Set Location to 5 276
         Set Size to 13 60
         Set Entry_State to False
         Set Enabled_State to False
-        Set Label_Col_Offset to 25
+        Set Label_Col_Offset to 15
         Set Form_Justification_Mode to Form_DisplayRight
-    End_Object
-
-    Object oFrmMunicipio is a Form
-        Set Label to "Município (SC):"
-        Set Location to 37 70
-        Set Size to 13 250
     End_Object
 
     Object oFrmStatus is a ComboForm
         Set Label to "Status:"
-        Set Location to 37 350
+        Set Location to 6 397
         Set Size to 13 60
         Set Label_Col_Offset to 25
         Set Combo_Sort_State to False
@@ -89,12 +72,37 @@ Object oEmpresa is a View
         
     End_Object
 
+    Object oFrmNome is a Form
+        Set Location to 21 143
+        Set Size to 13 315
+        Set Label to "Nome do empreendimento/empresa:"
+        Set Label_Col_Offset to 138
+        Set Capslock_State to True
+    End_Object
+
+    Object oFrmResponsavel is a Form
+        Set Label to "Nome do(a) empreendedor(a) responsável:"
+        Set Location to 37 143
+        Set Size to 13 315
+        Set Label_Col_Offset to 138
+        Set Capslock_State to True
+    End_Object
+
+    Object oFrmMunicipio is a Form
+        Set Label to "Município de Santa Catarina:"
+        Set Location to 53 143
+        Set Size to 13 160
+        Set Label_Col_Offset to 138
+        Set Capslock_State to True
+    End_Object
+
     Object oFrmSegmento is a ComboForm
         Set Label to "Segmento:"
-        Set Location to 53 70
-        Set Size to 13 250
+        Set Location to 52 343
+        Set Size to 13 115
         Set Combo_Sort_State to False
         Set Entry_State to False
+        Set Label_Col_Offset to 38
         
         Procedure Combo_Fill_List
             Send Combo_Add_Item ""
@@ -107,8 +115,8 @@ Object oEmpresa is a View
     End_Object
     
     Object oTabs is a TabDialog
-        Set Location to 70 5
-        Set Size to 100 406
+        Set Location to 69 5
+        Set Size to 100 454
         Set Rotate_Mode to RM_Rotate
         
         Object oTabEndereco is a TabPage
@@ -117,13 +125,16 @@ Object oEmpresa is a View
             Object oFrmCep is a Form
                 Set Label to "CEP:"
                 Set Location to 3 63
-                Set Size to 13 80
+                Set Size to 13 61
+                Set Form_Datatype to Mask_Window
+                Set Form_Mask to "#####-###"
             End_Object
             
             Object oFrmLogradouro is a Form
                 Set Label to "Rua/Av.:"
                 Set Location to 19 63
                 Set Size to 13 250
+                Set Capslock_State to True
             End_Object
             
             Object oFrmNumero is a Form
@@ -135,13 +146,15 @@ Object oEmpresa is a View
             Object oFrmBairro is a Form
                 Set Label to "Bairro:"
                 Set Location to 51 63
-                Set Size to 13 200
+                Set Size to 13 250
+                Set Capslock_State to True
             End_Object
             
             Object oFrmComplemento is a Form
                 Set Label to "Complemento:"
                 Set Location to 67 63
-                Set Size to 13 200
+                Set Size to 13 250
+                Set Capslock_State to True
             End_Object
             
         End_Object
@@ -159,12 +172,16 @@ Object oEmpresa is a View
                 Set Label to "Telefone:"
                 Set Location to 19 63
                 Set Size to 13 120
+                Set Form_Datatype to Mask_Window
+                Set Form_Mask to "(##)####-####"
             End_Object
             
             Object oFrmCelular is a Form
                 Set Label to "Celular:"
                 Set Location to 35 63
                 Set Size to 13 120
+                Set Form_Datatype to Mask_Window
+                Set Form_Mask to "(##)*####-####"
             End_Object
 
         End_Object
@@ -174,7 +191,7 @@ Object oEmpresa is a View
     Procedure pCarregarContato Integer iIdEmpresa
         Clear CONTATO_EMPRESA
         Move iIdEmpresa to CONTATO_EMPRESA.ID_EMPRESA
-        Find EQ CONTATO_EMPRESA by 1
+        Find EQ CONTATO_EMPRESA by 2
         If (Found) Begin
             Set Value of oFrmEmailContato to (Trim(CONTATO_EMPRESA.EMAIL))
             Set Value of oFrmTelefone     to (Trim(CONTATO_EMPRESA.TELEFONE))
@@ -190,7 +207,7 @@ Object oEmpresa is a View
     Procedure pCarregarEndereco Integer iIdEmpresa
         Clear ENDERECO_EMPRESA
         Move iIdEmpresa to ENDERECO_EMPRESA.ID_EMPRESA
-        Find EQ ENDERECO_EMPRESA by 1
+        Find EQ ENDERECO_EMPRESA by 2
         If (Found) Begin
             Set Value of oFrmCep          to (Trim(ENDERECO_EMPRESA.CEP))
             Set Value of oFrmLogradouro   to (Trim(ENDERECO_EMPRESA.LOGRADOURO))
@@ -230,8 +247,8 @@ Object oEmpresa is a View
 
     Procedure pLimparTela        
         Set Value of oFrmId           to ""
-        Set Value of oFrmNome         to ""
         Set Value of oFrmCNPJ         to ""
+        Set Value of oFrmNome         to ""
         Set Value of oFrmResponsavel  to ""
         Set Value of oFrmMunicipio    to ""
         Set Value of oFrmSegmento     to ""
@@ -244,6 +261,9 @@ Object oEmpresa is a View
         Set Value of oFrmEmailContato to ""
         Set Value of oFrmTelefone     to ""
         Set Value of oFrmCelular      to ""
+        Send Activate to oTabs
+        Send Activate to oTabEndereco
+        Send Activate to oFrmCNPJ
         Clear EMPRESA
         Clear ENDERECO_EMPRESA
         Clear CONTATO_EMPRESA
@@ -258,10 +278,12 @@ Object oEmpresa is a View
         
         If (Trim(sCNPJ) = "") Begin
             Send Info_Box "Informe o CNPJ da empresa." "Validação"
+            Send Activate to oFrmCNPJ
             Procedure_Return
         End
         If (Trim(sNome) = "") Begin
             Send Info_Box "Informe o nome da empresa." "Validação"
+            Send Activate to oFrmNome
             Procedure_Return
         End
 
@@ -285,6 +307,7 @@ Object oEmpresa is a View
                 //Salvar endereco                                                       
                 Get fProximoIdEndereco to iNovoID                                       
                 Clear ENDERECO_EMPRESA
+                Move iNovoID                                                            to ENDERECO_EMPRESA.ID_ENDERECO
                 Move EMPRESA.ID_EMPRESA                                                 to ENDERECO_EMPRESA.ID_EMPRESA                                                  
                 Move (Trim(Value(oFrmCep)))                                             to ENDERECO_EMPRESA.CEP
                 Move (Trim(Value(oFrmLogradouro)))                                      to ENDERECO_EMPRESA.LOGRADOURO
@@ -295,7 +318,8 @@ Object oEmpresa is a View
                                                                                         
                 //Salvar contatos                                                       
                 Get fProximoIdContato to iNovoID                                        
-                Clear CONTATO_EMPRESA                                                   
+                Clear CONTATO_EMPRESA
+                Move iNovoID                                                            to CONTATO_EMPRESA.ID_CONTATO
                 Move EMPRESA.ID_EMPRESA                                                 to CONTATO_EMPRESA.ID_EMPRESA
                 Move (Trim(Value(oFrmEmailContato)))                                    to CONTATO_EMPRESA.EMAIL
                 Move (Trim(Value(oFrmTelefone)))                                        to CONTATO_EMPRESA.TELEFONE
@@ -351,6 +375,7 @@ Object oEmpresa is a View
 
         If (iId = 0) Begin
             Send Info_Box "Carregue uma empresa para excluir." "Validação"
+            Send Activate to oFrmCNPJ
             Procedure_Return
         End
 
@@ -360,6 +385,19 @@ Object oEmpresa is a View
         If (Found) Begin
             If (YesNo_Box("Confirma exclusão?", "Atenção", MB_DEFBUTTON2) = MBR_Yes) Begin
                 Lock
+                    Clear ENDERECO_EMPRESA 
+                    Move EMPRESA.ID_EMPRESA to ENDERECO_EMPRESA.ID_EMPRESA
+                    Find eq ENDERECO_EMPRESA by 2
+                    If (Found) Begin
+                        Delete ENDERECO_EMPRESA
+                    End
+                    
+                    Clear CONTATO_EMPRESA 
+                    Move EMPRESA.ID_EMPRESA to CONTATO_EMPRESA.ID_EMPRESA
+                    Find eq CONTATO_EMPRESA by 2
+                    If (Found) Begin
+                        Delete CONTATO_EMPRESA
+                    End
                     Delete EMPRESA
                 Unlock
                 Send pLimparTela
@@ -369,7 +407,7 @@ Object oEmpresa is a View
 
     Object oBtnSalvar is a Button
         Set Label to "&Salvar"
-        Set Location to 173 5
+        Set Location to 171 5
         Set Size to 18 70
         
         Procedure OnClick
@@ -381,7 +419,7 @@ Object oEmpresa is a View
     
     Object oBtnLimpar is a Button
         Set Label to "&Limpar"
-        Set Location to 173 75
+        Set Location to 171 75
         Set Size to 18 70
         
         Procedure OnClick
@@ -393,7 +431,7 @@ Object oEmpresa is a View
 
     Object oBtnExcluir is a Button
         Set Label to "E&xcluir"
-        Set Location to 173 145
+        Set Location to 171 145
         Set Size to 18 70
         
         Procedure OnClick
@@ -403,7 +441,7 @@ Object oEmpresa is a View
     
     Object oBtnFechar is a Button
         Set Label to "&Fechar"
-        Set Location to 173 215
+        Set Location to 171 215
         Set Size to 18 70
         
         Procedure OnClick

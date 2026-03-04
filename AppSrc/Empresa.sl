@@ -8,11 +8,7 @@ Object oEmpresa_sl is a dbModalPanel
     Set Size to 140 417
     Set Location to 4 5
 
-    Object oDD is a cEMPRESADataDictionary
-        Procedure OnConstrain
-            If (sGlobalCNPJEmpresa<>"") Constrain EMPRESA.CNPJ_EMPRESA eq sGlobalCNPJEmpresa
-        End_Procedure
-        
+    Object oDD is a cEMPRESADataDictionary        
     End_Object
     
     Set Main_DD to oDD
@@ -25,11 +21,6 @@ Object oEmpresa_sl is a dbModalPanel
         Set peUpdateMode to umPromptCustom
         Set pbMultipleSelection to False
         
-        Function fStatus Returns String
-            If (EMPRESA.STATUS = 1) Function_Return "Ativo"
-            Else Function_Return "Inativo"
-        End_Function
-
         Object oColCNPJ is a cDbCJGridColumn
             Entry_Item EMPRESA.CNPJ_EMPRESA
             Set psCaption to "CNPJ / CPF"
@@ -38,7 +29,7 @@ Object oEmpresa_sl is a dbModalPanel
 
         Object oColNome is a cDbCJGridColumn
             Entry_Item EMPRESA.NOME_EMPRESA
-            Set psCaption to "Nome"
+            Set psCaption to "Nome do empreendimento/empresa"
             Set piWidth to 300
         End_Object
 
@@ -48,8 +39,7 @@ Object oEmpresa_sl is a dbModalPanel
             Set peHeaderAlignment to xtpAlignmentLeft
             
             Procedure OnSetCalculatedValue String ByRef sValue
-                If (EMPRESA.STATUS = 1) Move "Ativo" to sValue
-                Else Move "Inativo" to sValue
+                Move (GetDescricaoVT(Empresa_Status_VT, EMPRESA.STATUS)) to sValue
             End_Procedure
         End_Object
     End_Object
