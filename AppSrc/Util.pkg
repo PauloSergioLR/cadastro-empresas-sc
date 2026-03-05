@@ -1,0 +1,75 @@
+﻿//Funcoes que sao necessarias para a manipulacao de campos do tipo combo
+Function GetValorVT Global Handle hVT String sDescVT Returns String
+    Integer i
+    Variant[][2] vTerms
+
+    Get TableData of hVT to vTerms
+
+    For i from 0 to ((SizeOfArray(vTerms)) - 1)
+        If ((String(vTerms[i][1])) = sDescVT) Function_Return vTerms[i][0]
+    Loop
+
+    Function_Return ''
+End_Function
+
+Function GetDescricaoVT Global Handle hVT String sValor Returns String
+    Integer i
+    Variant[][2] vTerms
+
+    Get TableData of hVT to vTerms
+
+    For i from 0 to ((SizeOfArray(vTerms)) - 1)
+        If ((String(vTerms[i][0])) = sValor) Function_Return vTerms[i][1]
+    Loop
+
+    Function_Return ''
+End_Function
+
+//Funcao para pegar o proximo id para registro
+Function fProximoIdEmpresa Returns Integer
+    Integer iNovoID
+
+    Clear EMPRESA
+    Move 99999999 to EMPRESA.ID_EMPRESA
+    Find LT EMPRESA by 1
+    If (Found) Begin
+        Move (EMPRESA.ID_EMPRESA + 1) to iNovoID
+    End
+    Else Begin
+        Move 1 to iNovoID
+    End
+
+    Function_Return iNovoID
+End_Function
+
+Function fProximoIdEndereco Returns Integer
+    Integer iNovoID
+
+    Clear ENDERECO_EMPRESA
+    Move 99999999 to ENDERECO_EMPRESA.ID_ENDERECO
+    Find LT ENDERECO_EMPRESA by 1
+    If (Found) Begin
+        Move (ENDERECO_EMPRESA.ID_ENDERECO + 1) to iNovoID
+    End
+    Else Begin
+        Move 1 to iNovoID
+    End
+
+    Function_Return iNovoID
+End_Function
+
+Function fProximoIdContato Returns Integer
+    Integer iNovoID
+
+    Clear CONTATO_EMPRESA
+    Move 99999999 to CONTATO_EMPRESA.ID_CONTATO
+    Find LT CONTATO_EMPRESA by 1
+    If (Found) Begin
+        Move (CONTATO_EMPRESA.ID_CONTATO + 1) to iNovoID
+    End
+    Else Begin
+        Move 1 to iNovoID
+    End
+
+    Function_Return iNovoID
+End_Function
