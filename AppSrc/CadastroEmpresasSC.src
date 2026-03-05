@@ -21,7 +21,7 @@ Use oEditContextMenu.pkg
 Use oDEOEditContextMenu17.pkg
 
 Object oMain is a Panel
-    Set Label to "Cadastro de Empresas de Santa Catarina"
+    Set Label to "Cadastro de Empreendimento/Empresas de Santa Catarina"
     Set Location to 4 3
     Set Size to 300 450
     
@@ -52,13 +52,12 @@ Object oMain is a Panel
 
             Object oEmpresasMenu is a cCJMenuItem
                 Set peControlType to xtpControlPopup
-                Set psCaption     to "&Empresas"
-                Set psDescription to "Cadastro e consulta de empresas de Santa Catarina."
+                Set psCaption     to "&Empreendimento/Empresas"
+                Set psDescription to "Cadastro e consulta de empreendimento/empresas de Santa Catarina."
                 Set psCategory    to "Menus"
 
                 Object oEmpresaNovo is a cCJMenuItem
-                    Set psCaption     to "&Cadastrar Empresa"
-                    Set psDescription to "Cadastrar uma nova empresa."
+                    Set psCaption     to "&Cadastrar Empreendimento/Empresas"
                     
                     Procedure OnExecute
                         Send Activate_oEmpresa to (oClientArea(oMain(Current_Object)))

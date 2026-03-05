@@ -11,7 +11,7 @@ Deferred_View Activate_oEmpresa for ;
 Object oEmpresa is a View
     Set Size to 192 462
     Set Location to 3 4
-    Set Label to "Cadastro de Empresas - SC"
+    Set Label to "Cadastro de Empreendimento/Empresas - SC"
     
     Object oFrmCNPJ is a Form
         Set Label to "CNPJ / CPF:"
