@@ -69,11 +69,8 @@ CadastroEmpresasSC
 ├── Programs
 │   └── Config.ws
 │
-├── AppHtml
-├── Bitmaps
-├── Help
-│
 ├── CadastroEmpresasSC.sws
+├── README.md
 └── .gitignore
 ```
 
@@ -82,10 +79,7 @@ CadastroEmpresasSC
 AppSrc → Contém os arquivos principais da aplicação (interface e lógica)  
 Data → Arquivos do banco de dados do DataFlex  
 DDSrc → Data Dictionaries responsáveis pela manipulação das tabelas  
-Programs → Contém o workspace e onde ficará o executável gerado após a compilação  
-AppHtml → Estrutura padrão do workspace  
-Bitmaps → Arquivos de imagem do projeto  
-Help → Arquivos de ajuda do workspace  
+Programs → Contém o workspace e onde ficará o executável gerado após a compilação 
 
 ---
 
